@@ -1,8 +1,10 @@
 import { ImapFlow } from "imapflow";
 import { env } from "../shared/util.js";
+import { getAccessToken, oauthConfigured } from "./auth.js";
 
 export function mailConfigured() {
-  return Boolean(env.imap.host && env.imap.user && env.imap.pass);
+  const basicAuth = env.imap.host && env.imap.user && env.imap.pass;
+  return Boolean(basicAuth || (env.imap.host && env.imap.user && oauthConfigured()));
 }
 
 function decode(value) {
@@ -16,13 +18,25 @@ export async function fetchRecentMails({ sinceHours = 24, limit = 50 } = {}) {
   if (!mailConfigured()) {
     return { configured: false, mails: [] };
   }
-  const client = new ImapFlow({
-    host: env.imap.host,
-    port: env.imap.port,
-    secure: env.imap.tls,
-    auth: { user: env.imap.user, pass: env.imap.pass },
-    logger: false,
-  });
+  let accessToken = null;
+if (!env.imap.pass) {
+  try {
+    accessToken = await getAccessToken();
+  } catch (err) {
+    return { configured: true, error: err.message, mails: [] };
+  }
+}
+const auth = env.imap.pass
+  ? { user: env.imap.user, pass: env.imap.pass }
+  : { user: env.imap.user, accessToken };
+
+const client = new ImapFlow({
+  host: env.imap.host,
+  port: env.imap.port,
+  secure: env.imap.tls,
+  auth,
+  logger: false,
+});
 
   const since = new Date(Date.now() - sinceHours * 3600 * 1000);
   const mails = [];
@@ -54,3 +68,5 @@ export async function fetchRecentMails({ sinceHours = 24, limit = 50 } = {}) {
 
   return { configured: true, mails };
 }
+
+

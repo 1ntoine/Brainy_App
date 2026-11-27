@@ -15,6 +15,7 @@
     "dev:calendar": "node services/calendar/index.js",
     "dev:notifications": "node services/notifications/index.js",
     "dev:routine": "node services/routine/index.js",
+    "routine:auth": "node services/routine/auth.js",
     "dev:web": "npm run dev --workspace apps/web",
     "build:web": "npm run build --workspace apps/web",
     "start:backend": "concurrently -n gateway,tasks,calendar,notif,routine \"npm:dev:gateway\" \"npm:dev:tasks\" \"npm:dev:calendar\" \"npm:dev:notifications\" \"npm:dev:routine\""

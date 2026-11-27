@@ -34,7 +34,9 @@ export const env = {
   calendarPort: Number(process.env.CALENDAR_PORT || 4002),
   notificationsPort: Number(process.env.NOTIFICATIONS_PORT || 4003),
   routinePort: Number(process.env.ROUTINE_PORT || 4004),
-  routineTime: process.env.ROUTINE_TIME || "07:00",
+    routineTime: process.env.ROUTINE_TIME || "07:00",
+  azureClientId: process.env.AZURE_CLIENT_ID || "",
+  azureTenantId: process.env.AZURE_TENANT_ID || "common",
   weatherCity: process.env.WEATHER_CITY || "Paris",
   imap: {
     host: process.env.IMAP_HOST || "",
