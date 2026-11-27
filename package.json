@@ -1,0 +1,32 @@
+{
+  "name": "taskhub",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Dashboard local d'organisation : tâches, projets, calendrier, notifications, routine du matin",
+  "workspaces": [
+    "apps/web"
+  ],
+  "scripts": {
+    "install:all": "npm install && npm install --workspace apps/web",
+    "dev": "concurrently -n gateway,tasks,calendar,notif,routine,web -c blue,green,cyan,magenta,yellow \"npm:dev:gateway\" \"npm:dev:tasks\" \"npm:dev:calendar\" \"npm:dev:notifications\" \"npm:dev:routine\" \"npm:dev:web\"",
+    "dev:gateway": "node services/gateway/index.js",
+    "dev:tasks": "node services/tasks/index.js",
+    "dev:calendar": "node services/calendar/index.js",
+    "dev:notifications": "node services/notifications/index.js",
+    "dev:routine": "node services/routine/index.js",
+    "dev:web": "npm run dev --workspace apps/web",
+    "build:web": "npm run build --workspace apps/web",
+    "start:backend": "concurrently -n gateway,tasks,calendar,notif,routine \"npm:dev:gateway\" \"npm:dev:tasks\" \"npm:dev:calendar\" \"npm:dev:notifications\" \"npm:dev:routine\""
+  },
+  "dependencies": {
+    "concurrently": "^9.1.2",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "dayjs": "^1.11.13",
+    "imapflow": "^1.0.221"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
